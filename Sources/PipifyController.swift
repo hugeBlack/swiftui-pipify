@@ -78,7 +78,7 @@ public final class PipifyController: NSObject, ObservableObject, AVPictureInPict
         // Combined with a certain time range this makes it so the skip buttons are not visible / interactable.
         // if an `onSkip` closure is provied then we don't do this
         pipController?.requiresLinearPlayback = onSkip == nil
-        
+        pipController?.setValue(1, forKey: "controlsStyle")
         pipController?.delegate = self
     }
     
@@ -132,12 +132,7 @@ public final class PipifyController: NSObject, ObservableObject, AVPictureInPict
             logger.warning("could not start: already active")
             return
         }
-        
-        #if !os(macOS)
-        logger.info("activating audio session")
-        try? AVAudioSession.sharedInstance().setActive(true)
-        #endif
-        
+                
         // force the timestamp to update
         pipController.invalidatePlaybackState()
         
@@ -167,11 +162,7 @@ public final class PipifyController: NSObject, ObservableObject, AVPictureInPict
         
         logger.info("stopping picture in picture")
         pipController.stopPictureInPicture()
-        
-        #if !os(macOS)
-        logger.info("deactivating audio session")
-        try? AVAudioSession.sharedInstance().setActive(false)
-        #endif
+
     }
     
     // MARK: - AVPictureInPictureControllerDelegate
